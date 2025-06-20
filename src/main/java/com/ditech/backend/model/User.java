@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 /**
  * Entidad que representa a un usuario dentro del sistema.
@@ -26,9 +28,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "El nombre de usuario no puede estar vacío")
     @Column(name = "username", nullable = false, length = 50, unique = true)
     private String username;
 
+    @Email
     @Column(name = "email", nullable = false, length = 100, unique = true)
     private String email;
 

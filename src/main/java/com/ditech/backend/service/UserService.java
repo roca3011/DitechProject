@@ -2,6 +2,8 @@ package com.ditech.backend.service;
 
 import com.ditech.backend.model.User;
 import com.ditech.backend.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +16,8 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     /**
      * Constructor del servicio de usuarios.
@@ -31,7 +35,10 @@ public class UserService {
      * @return Usuario persistido con ID generado si es nuevo.
      */
     public User saveUser(User user) {
-        return userRepository.save(user);
+        log.info("Guardando usuario: username={}, email={}", user.getUsername(), user.getEmail());
+        User saved = userRepository.save(user);
+        log.debug("Usuario guardado con ID={}", saved.getId());
+        return saved;
     }
 
     /**
@@ -40,7 +47,10 @@ public class UserService {
      * @return Lista de usuarios.
      */
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        log.info("Recuperando todos los usuarios");
+        List<User> users = userRepository.findAll();
+        log.debug("Se recuperaron {} usuarios", users.size());
+        return users;
     }
 
     /**
@@ -50,7 +60,14 @@ public class UserService {
      * @return Optional con el usuario si existe, vacío si no se encuentra.
      */
     public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+        log.info("Buscando usuario con ID={}", id);
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isPresent()) {
+            log.debug("Usuario encontrado: {}", userOpt.get().getUsername());
+        } else {
+            log.warn("Usuario con ID={} no encontrado", id);
+        }
+        return userOpt;
     }
 
     /**
@@ -59,6 +76,8 @@ public class UserService {
      * @param id ID del usuario a eliminar.
      */
     public void deleteUser(Long id) {
+        log.info("Eliminando usuario con ID={}", id);
         userRepository.deleteById(id);
+        log.debug("Usuario con ID={} eliminado", id);
     }
 }
