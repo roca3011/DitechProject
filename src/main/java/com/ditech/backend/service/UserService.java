@@ -29,13 +29,27 @@ public class UserService {
     }
 
     /**
-     * Guarda un nuevo usuario o actualiza uno existente.
+     * Guarda un nuevo usuario en la base de datos.
      *
      * @param user Objeto User que se desea persistir.
-     * @return Usuario persistido con ID generado si es nuevo.
+     * @return Usuario persistido con ID generado.
+     * @throws IllegalArgumentException si el ID no es null, o si el username o email ya existen.
      */
     public User saveUser(User user) {
         log.info("Guardando usuario: username={}, email={}", user.getUsername(), user.getEmail());
+
+        if (user.getId() != null) {
+            throw new IllegalArgumentException("El ID debe ser null para crear un nuevo usuario");
+        }
+
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+        }
+
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("El email ya está registrado");
+        }
+
         User saved = userRepository.save(user);
         log.debug("Usuario guardado con ID={}", saved.getId());
         return saved;

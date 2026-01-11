@@ -10,6 +10,7 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  * Entidad que representa a un usuario dentro del sistema.
@@ -29,10 +30,13 @@ public class User {
     private Long id;
 
     @NotBlank(message = "El nombre de usuario no puede estar vacío")
+    @Size(max = 50, message = "El nombre de usuario no puede exceder 50 caracteres")
     @Column(name = "username", nullable = false, length = 50, unique = true)
     private String username;
 
-    @Email
+    @NotBlank(message = "El email no puede estar vacío")
+    @Email(message = "El formato del email no es válido")
+    @Size(max = 100, message = "El email no puede exceder 100 caracteres")
     @Column(name = "email", nullable = false, length = 100, unique = true)
     private String email;
 

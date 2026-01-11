@@ -15,4 +15,20 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * - existsById()
  */
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    /**
+     * Verifica si existe un usuario con el username especificado.
+     *
+     * @param username Nombre de usuario a verificar.
+     * @return true si existe, false en caso contrario.
+     */
+    boolean existsByUsername(String username);
+
+    /**
+     * Verifica si existe un usuario con el email especificado.
+     *
+     * @param email Email a verificar.
+     * @return true si existe, false en caso contrario.
+     */
+    boolean existsByEmail(String email);
 }
